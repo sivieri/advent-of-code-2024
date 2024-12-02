@@ -2,7 +2,7 @@ package me.sivieri.aoc2024.day1
 
 import me.sivieri.aoc2024.common.Utils
 
-object Main1 {
+object Main2 {
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -12,7 +12,7 @@ object Main1 {
                 val d = it.split("   ")
                 Pair(d[0].toLong(), d[1].toLong())
             }
-        val result = LocationList.totalDistance(data)
+        val result = LocationList.similarityScore(data)
         println(result)
     }
 
