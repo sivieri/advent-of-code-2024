@@ -6,4 +6,6 @@ class RedNosedReactor(
 
     fun countSafeReports(): Int = reports.count { it.isSafe() }
 
+    fun countSafeReportsWithProblemDampener(): Int = reports.count { it.isSafeWithProblemDampener() }
+
 }

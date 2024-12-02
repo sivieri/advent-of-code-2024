@@ -22,4 +22,21 @@ class RedNosedReactorTest {
         assertEquals(2, count)
     }
 
+    @Test
+    fun `part 2 example`() {
+        val data = """
+            7 6 4 2 1
+            1 2 7 8 9
+            9 7 6 2 1
+            1 3 2 4 5
+            8 6 4 4 1
+            1 3 6 7 9
+        """.trimIndent()
+            .split("\n")
+            .map { Report.fromString(it) }
+        val reactor = RedNosedReactor(data)
+        val count = reactor.countSafeReportsWithProblemDampener()
+        assertEquals(4, count)
+    }
+
 }
