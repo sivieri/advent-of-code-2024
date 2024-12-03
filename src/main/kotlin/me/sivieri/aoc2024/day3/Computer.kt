@@ -2,7 +2,10 @@ package me.sivieri.aoc2024.day3
 
 object Computer {
 
-    fun findUncorruptedMultiply(text: String): List<Multiply> {
+    fun multiplyResult(text: String): Long = findUncorruptedMultiply(text)
+        .sumOf { it.result() }
+
+    private fun findUncorruptedMultiply(text: String): List<Multiply> {
         val matched = Multiply.regex.findAll(text)
         return matched.map {
             val parts = it
