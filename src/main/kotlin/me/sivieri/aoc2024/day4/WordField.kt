@@ -50,11 +50,68 @@ class WordField(
         }
     }
 
+    fun countXAndMasOccurrences(): Int {
+        var counter = 0
+
+        val xs = (0 until maxX).windowed(3)
+        (0 until maxY - 2).forEach { y ->
+            xs.forEach { range ->
+                val slice = IntRange(range[0], range[2])
+                val current = arrayOf(
+                    letters[y].sliceArray(slice),
+                    letters[y + 1].sliceArray(slice),
+                    letters[y + 2].sliceArray(slice),
+                )
+                val s = listOf(
+                    current[0][0],
+                    '.',
+                    current[0][2],
+                    '\n',
+                    '.',
+                    current[1][1],
+                    '.',
+                    '\n',
+                    current[2][0],
+                    '.',
+                    current[2][2]
+                ).joinToString("")
+                if (footprints.contains(s)) counter++
+            }
+        }
+
+        return counter
+    }
+
     private fun updateSafe(c: Coordinate2D, incr: Coordinate2D): Coordinate2D? =
         if (c.x + incr.x >= maxX ||
             c.x + incr.x < 0 ||
             c.y + incr.y >= maxY ||
             c.y + incr.y < 0) null
         else Coordinate2D(c.x + incr.x, c.y + incr.y)
+
+    companion object {
+        private val footprints = setOf(
+            """
+                M.S
+                .A.
+                M.S
+            """.trimIndent(),
+            """
+                M.M
+                .A.
+                S.S
+            """.trimIndent(),
+            """
+                S.S
+                .A.
+                M.M
+            """.trimIndent(),
+            """
+                S.M
+                .A.
+                S.M
+            """.trimIndent()
+        )
+    }
 
 }
