@@ -12,4 +12,11 @@ enum class Direction {
         LEFT -> listOf(UP, DOWN)
         RIGHT -> listOf(UP, DOWN)
     }
+
+    fun turnRight(): Direction = when (this) {
+        UP -> RIGHT
+        DOWN -> LEFT
+        LEFT -> UP
+        RIGHT -> DOWN
+    }
 }
