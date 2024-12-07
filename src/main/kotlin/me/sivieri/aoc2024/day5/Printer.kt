@@ -22,27 +22,16 @@ class Printer(input: String) {
             }
     }
 
-    fun sumMiddlePagesOfValidUpdates(): Int = findValidUpdates().sumOf { it.middle() }
+    fun sumMiddlePagesOfValidUpdates(): Int = findValidUpdates().first.sumOf { it.middle() }
 
-    private fun findValidUpdates(): List<Update> {
-        return updates.filter { update ->
-            rules.forEach { it.status = RuleStatus.NOT_USED }
-            update
-                .pages
-                .forEach { v ->
-                    rules.forEach { rule ->
-                        if (v == rule.before && rule.status == RuleStatus.NOT_USED) rule.status = RuleStatus.START
-                        if (v == rule.before && rule.status == RuleStatus.END) rule.status = RuleStatus.END_BEFORE_START
-                        if (v == rule.before && rule.status == RuleStatus.END_BEFORE_START) rule.status = RuleStatus.END_BEFORE_START
-                        if (v == rule.before && rule.status == RuleStatus.START) rule.status = RuleStatus.START
+    fun sumMiddlePagesAfterCorrection(): Int = findValidUpdates()
+        .second
+        .map { it.correct(rules) }
+        .sumOf { it.middle() }
 
-                        if (v == rule.after && rule.status == RuleStatus.NOT_USED) rule.status = RuleStatus.END
-                        if (v == rule.after && rule.status == RuleStatus.START) rule.status = RuleStatus.END
-                        if (v == rule.after && rule.status == RuleStatus.END) rule.status = RuleStatus.END
-                        if (v == rule.after && rule.status == RuleStatus.END_BEFORE_START) rule.status = RuleStatus.END_BEFORE_START
-                    }
-                }
-            rules.none { it.status == RuleStatus.END_BEFORE_START }
+    private fun findValidUpdates(): Pair<List<Update>, List<Update>> {
+        return updates.partition { update ->
+            update.isValid(rules)
         }
     }
 

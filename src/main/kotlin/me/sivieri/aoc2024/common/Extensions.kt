@@ -38,6 +38,17 @@ internal fun <T> List<T>.permutations(): List<List<T>> {
     return retVal
 }
 
+internal fun <T> List<T>.permutationsLazy(): Sequence<List<T>> {
+    if (isEmpty()) return sequenceOf(emptyList())
+    val list = this
+    return indices
+        .asSequence()
+        .flatMap { i ->
+            val elem = list[i]
+            (list - elem).permutationsLazy().map { perm -> perm + elem }
+        }
+}
+
 internal fun <A, B> cartesianProduct(a: List<A>, b: List<B>): List<Pair<A, B>> =
     a.flatMap { aElement -> b.map { bElement -> aElement to bElement } }
 
