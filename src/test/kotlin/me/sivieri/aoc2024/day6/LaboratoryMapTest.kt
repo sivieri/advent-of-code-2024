@@ -24,4 +24,23 @@ class LaboratoryMapTest {
         assertEquals(41, result)
     }
 
+    @Test
+    fun `part 2 example`() {
+        val text = """
+            ....#.....
+            .........#
+            ..........
+            ..#.......
+            .......#..
+            ..........
+            .#..^.....
+            ........#.
+            #.........
+            ......#...
+        """.trimIndent()
+        val lab = LaboratoryMap(text)
+        val result = lab.countObstaclesForLoops()
+        assertEquals(6, result)
+    }
+
 }

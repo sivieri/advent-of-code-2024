@@ -59,6 +59,10 @@ class LaboratoryMap(input: String) {
         return positions.size
     }
 
+    fun countObstaclesForLoops(): Int {
+        TODO()
+    }
+
     private fun move(position: Coordinate2D, direction: Direction): Coordinate2D = when (direction) {
         Direction.UP -> Coordinate2D(position.x, position.y - 1)
         Direction.DOWN -> Coordinate2D(position.x, position.y + 1)
