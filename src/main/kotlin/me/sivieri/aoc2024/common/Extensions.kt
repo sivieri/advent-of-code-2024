@@ -162,7 +162,7 @@ internal fun <T> List<T>.repeat(n: Int): List<T> = (1..n).fold(this) { acc, _ ->
 
 internal fun Pair<Int, Int>.sum() = this.first + this.second
 
-internal fun List<Coordinate2D>.toPolygon(): Polygon = GeometryFactory()
+internal fun List<Coordinate2>.toPolygon(): Polygon = GeometryFactory()
     .createPolygon(this.plus(this.first()).map { Coordinate(it.x.toDouble(), it.y.toDouble()) }.toTypedArray())
 
 internal fun rangeBetween(a: Int, b: Int) = min(a, b) .. max(a, b)

@@ -1,6 +1,6 @@
 package me.sivieri.aoc2024.day4
 
-import me.sivieri.aoc2024.common.Coordinate2D
+import me.sivieri.aoc2024.common.Coordinate2
 
 class WordField(
     text: String
@@ -19,14 +19,14 @@ class WordField(
 
         (0 until maxY).forEach { y ->
             (0 until maxX).forEach { x ->
-                counter += searchXmas(Coordinate2D(x, y))
+                counter += searchXmas(Coordinate2(x, y))
             }
         }
 
         return counter
     }
 
-    private fun searchXmas(c: Coordinate2D): Int {
+    private fun searchXmas(c: Coordinate2): Int {
         // X
         if (letters[c.y][c.x] != 'X') return 0
 
@@ -82,12 +82,12 @@ class WordField(
         return counter
     }
 
-    private fun updateSafe(c: Coordinate2D, incr: Coordinate2D): Coordinate2D? =
+    private fun updateSafe(c: Coordinate2, incr: Coordinate2): Coordinate2? =
         if (c.x + incr.x >= maxX ||
             c.x + incr.x < 0 ||
             c.y + incr.y >= maxY ||
             c.y + incr.y < 0) null
-        else Coordinate2D(c.x + incr.x, c.y + incr.y)
+        else Coordinate2(c.x + incr.x, c.y + incr.y)
 
     companion object {
         private val footprints = setOf(
