@@ -3,14 +3,18 @@ package me.sivieri.aoc2024.common
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import me.sivieri.aoc2024.external.CombinationsWithRepetitionGenerator
+import me.sivieri.aoc2024.external.CombinatorialSequence
 import org.jgrapht.Graph
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.geom.Polygon
+import java.math.BigInteger
 import java.util.*
 import java.util.Collections.swap
 import kotlin.math.max
 import kotlin.math.min
+
 
 internal fun String.toIntList(): List<Int> = this.split(",").map { it.toInt() }
 
@@ -123,6 +127,8 @@ internal fun String.halve(): Pair<String, String> {
     )
 }
 
+internal fun <T> List<T>.head(): T = first()
+
 internal fun <T> List<T>.tail(): List<T> = when (this.size) {
     0 -> throw IllegalArgumentException("There is no tail in an empty list!")
     1 -> emptyList()
@@ -175,3 +181,28 @@ internal fun <T, R> Iterable<T>.foldIndexed(initial: R, operation: (acc: R, Int,
     }
     return accumulator
 }
+
+fun combinationsWithRepetition(n: Int, r: Int): BigInteger {
+    require(n >= 1 && r >= 0)
+    return factorialHelper(n + r - 1) / factorialHelper(r) / factorialHelper(n - 1)
+}
+
+private fun factorialHelper(n: Int): BigInteger {
+    var acc = BigInteger.ONE
+    for (i in 2..n) {
+        acc *= i.toBigInteger()
+    }
+    return acc
+}
+
+inline fun <reified R> IntArray.mapToArray(newSize: Int = size, transform: (Int) -> R): Array<R> {
+    val result = arrayOfNulls<R>(newSize)
+    repeat(newSize) {
+        result[it] = transform(this[it])
+    }
+    @Suppress("UNCHECKED_CAST")
+    return result as Array<R>
+}
+
+inline fun <reified T> List<T>.combinationsWithRepetition(length: Int): CombinatorialSequence<List<T>> =
+    CombinationsWithRepetitionGenerator.generate(this, length)

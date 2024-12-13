@@ -1,15 +1,22 @@
 package me.sivieri.aoc2024.common;
 
-import java.util.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 // copied from https://github.com/MattHeard/k-Combinations--Java-/blob/master/KCombinations.java
+@SuppressWarnings("unchecked")
 public class KCombinations {
 
-    public static ArrayList<int[]> enumKCombos(int[] array, int k) {
+    public static <T> ArrayList<T[]> enumKCombos(
+            Class<T> type,
+            T[] array,
+            int k
+    ) {
 
         // Create an empty ArrayList to store all the k-combinations.
         // The k-combinations are stored as int arrays.
-        ArrayList<int[]> comboList = new ArrayList<>();
+        ArrayList<T[]> comboList = new ArrayList<>();
 
         // The process of enumerating the k-combinations can be done with a
         // recursive function where each recursion is passed a shorter array and
@@ -23,22 +30,22 @@ public class KCombinations {
             assert(array.length >= k);
 
             // Store the first member of the array.
-            int[] first = new int[1];
+            T[] first = (T[]) Array.newInstance(type, 1);
             first[0] = array[0];
             array = Arrays.copyOfRange(array, 1, array.length);
 
             while (array.length + 1 >= k) {
-                ArrayList<int[]> subComboList;
+                ArrayList<T[]> subComboList;
                 // Call the recursive function and temporarily store the
                 //   returned arrays.
-                subComboList = enumKCombos(array, k - 1);
+                subComboList = enumKCombos(type, array, k - 1);
 
                 // Concatenate the stored first member onto the front of the
                 //   returned arrays.
-                int[] subArray;
-                for (int[] ints : subComboList) {
+                T[] subArray;
+                for (T[] ints : subComboList) {
                     subArray = ints;
-                    int[] concatenated = new int[subArray.length + 1];
+                    T[] concatenated = (T[]) Array.newInstance(type, subArray.length + 1);
                     concatenated[0] = first[0];
                     System.arraycopy(subArray, 0, concatenated, 1, subArray.length);
                     comboList.add(concatenated);
