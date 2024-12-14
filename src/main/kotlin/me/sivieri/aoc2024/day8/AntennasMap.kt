@@ -1,6 +1,10 @@
 package me.sivieri.aoc2024.day8
 
 import me.sivieri.aoc2024.common.Coordinate2
+import me.sivieri.aoc2024.common.DiagonalLine
+import me.sivieri.aoc2024.common.HorizontalLine
+import me.sivieri.aoc2024.common.Line
+import me.sivieri.aoc2024.common.VerticalLine
 import me.sivieri.aoc2024.external.permutations
 
 class AntennasMap(data: String) {
@@ -22,6 +26,48 @@ class AntennasMap(data: String) {
         .flatMap { findAntinodesForLetter(it) }
         .distinct()
         .size
+
+    fun countAntinodesIgnoringDistance(): Int = listOf<List<Char>>(
+        ('a' .. 'z').toList(),
+        ('A' .. 'Z').toList(),
+        ('0' .. '9').toList()
+    )
+        .flatten()
+        .flatMap { findAntinodesForLetterIgnoringDistance(it) }
+        .distinct()
+        .size
+
+    private fun findAntinodesForLetterIgnoringDistance(c: Char): List<Coordinate2> {
+        val coordinates = findCoordinatesForLetter(c)
+        return if (coordinates.size < 2) emptyList()
+        else coordinates
+            .permutations(2)
+            .flatMap { l ->
+                val points = l.toMutableList()
+                // first direction
+                var prev = l[0]
+                var cur = l[1]
+                var p = prev.findOpposite(cur)
+                while (isValid(p)) {
+                    points.add(p.copy())
+                    prev = cur
+                    cur = p
+                    p = prev.findOpposite(cur)
+                }
+                // second direction
+                prev = l[1]
+                cur = l[0]
+                p = prev.findOpposite(cur)
+                while (isValid(p)) {
+                    points.add(p.copy())
+                    prev = cur
+                    cur = p
+                    p = prev.findOpposite(cur)
+                }
+                points
+            }
+            .toList()
+    }
 
     private fun findAntinodesForLetter(c: Char): List<Coordinate2> {
         val coordinates = findCoordinatesForLetter(c)
