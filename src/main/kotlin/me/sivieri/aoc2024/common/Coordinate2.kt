@@ -14,6 +14,12 @@ data class Coordinate2(
     fun manhattanDistance(other: Coordinate2): Int =
         abs(this.x - other.x) + abs(this.y - other.y)
 
+    fun findOpposite(pivot: Coordinate2): Coordinate2 {
+        val xdiff = this.x - pivot.x
+        val ydiff = this.y - pivot.y
+        return Coordinate2(pivot.x - xdiff, pivot.y - ydiff)
+    }
+
     override fun compareTo(other: Coordinate2): Int = when {
         ORIGIN.distance(this) < ORIGIN.distance(other) -> -1
         ORIGIN.distance(this) > ORIGIN.distance(other) -> 1
