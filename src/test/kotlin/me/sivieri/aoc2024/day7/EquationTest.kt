@@ -29,9 +29,21 @@ class EquationTest {
     }
 
     @Test
+    fun fourConcat() {
+        val eq = Equation(4, 156, listOf(15, 6))
+        assertEquals(true, eq.tryRepairOperatorsWithConcat())
+    }
+
+    @Test
     fun five() {
         val eq = Equation(5, 7290, listOf(6, 8, 6, 15))
         assertEquals(false, eq.tryRepairOperators())
+    }
+
+    @Test
+    fun fiveConcat() {
+        val eq = Equation(5, 7290, listOf(6, 8, 6, 15))
+        assertEquals(true, eq.tryRepairOperatorsWithConcat())
     }
 
     @Test
@@ -44,6 +56,12 @@ class EquationTest {
     fun seven() {
         val eq = Equation(7, 192, listOf(17, 8, 14))
         assertEquals(false, eq.tryRepairOperators())
+    }
+
+    @Test
+    fun sevenConcat() {
+        val eq = Equation(7, 192, listOf(17, 8, 14))
+        assertEquals(true, eq.tryRepairOperatorsWithConcat())
     }
 
     @Test

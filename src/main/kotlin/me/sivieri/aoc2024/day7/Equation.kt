@@ -23,4 +23,18 @@ data class Equation(
                 }
                 accepted && result == this.result
             }
+
+    fun tryRepairOperatorsWithConcat(): Boolean =
+        listOf(Plus, Mult, Concat)
+            .combinationsWithRepetition(values.size - 1)
+            .flatMap { it.permutations() }
+            .any { combo ->
+                val opsWithValues = values.tail().zip(combo)
+                var result = values.head()
+                val accepted = opsWithValues.all { (value, op) ->
+                    result = op.apply(result, value)
+                    result <= this.result
+                }
+                accepted && result == this.result
+            }
 }

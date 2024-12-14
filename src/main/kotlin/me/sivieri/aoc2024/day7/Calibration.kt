@@ -16,4 +16,8 @@ class Calibration(data: List<String>) {
         .filter { println(it.index); it.tryRepairOperators() }
         .sumOf { it.result }
 
+    fun calibrateAndSumWithConcat(): Long = equations
+        .filter { println(it.index); it.tryRepairOperatorsWithConcat() }
+        .sumOf { it.result }
+
 }
