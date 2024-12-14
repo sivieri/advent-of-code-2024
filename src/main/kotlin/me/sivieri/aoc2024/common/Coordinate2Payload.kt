@@ -11,10 +11,12 @@ data class Coordinate2Payload<T>(
 ): Comparable<Coordinate2Payload<T>> {
 
     fun distance(other: Coordinate2Payload<T>): Int =
-        kotlin.math.sqrt((other.x - x).toDouble().pow(2) + (other.y - y).toDouble().pow(2) + (other.y - y).toDouble().pow(2)).toInt()
+        sqrt((other.x - x).toDouble().pow(2) + (other.y - y).toDouble().pow(2) + (other.y - y).toDouble().pow(2)).toInt()
 
     fun manhattanDistance(other: Coordinate2Payload<T>): Int =
         abs(this.x - other.x) + abs(this.y - other.y)
+
+    fun toCoordinate2(): Coordinate2 = Coordinate2(x, y)
 
     override fun compareTo(other: Coordinate2Payload<T>): Int = when {
         originDistance(this) < originDistance(other) -> -1
@@ -25,7 +27,6 @@ data class Coordinate2Payload<T>(
     override fun toString(): String {
         return "($x, $y, $payload)"
     }
-
 
     companion object {
         private val ORIGIN_X = 0
