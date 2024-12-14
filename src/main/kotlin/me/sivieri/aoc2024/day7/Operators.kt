@@ -11,3 +11,7 @@ data object Plus: Operator {
 data object Mult: Operator {
     override fun apply(left: Long, right: Long): Long = left * right
 }
+
+data object Concat: Operator {
+    override fun apply(left: Long, right: Long): Long = (left.toString() + right.toString()).toLong()
+}
