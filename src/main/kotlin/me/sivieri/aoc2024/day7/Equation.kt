@@ -1,9 +1,9 @@
 package me.sivieri.aoc2024.day7
 
-import me.sivieri.aoc2024.common.combinationsWithRepetition
 import me.sivieri.aoc2024.common.head
-import me.sivieri.aoc2024.common.permutations
 import me.sivieri.aoc2024.common.tail
+import me.sivieri.aoc2024.external.combinationsWithRepetition
+import me.sivieri.aoc2024.external.permutations
 
 data class Equation(
     val index: Int,
@@ -16,9 +16,11 @@ data class Equation(
             .flatMap { it.permutations() }
             .any { combo ->
                 val opsWithValues = values.tail().zip(combo)
-                val result = opsWithValues.fold(values.head()) { acc, (cur, op) ->
-                    op.apply(acc, cur)
+                var result = values.head()
+                val accepted = opsWithValues.all { (value, op) ->
+                    result = op.apply(result, value)
+                    result <= this.result
                 }
-                result == this.result
+                accepted && result == this.result
             }
 }

@@ -1,7 +1,5 @@
 package me.sivieri.aoc2024.external
 
-import me.sivieri.aoc2024.common.combinationsWithRepetition
-import me.sivieri.aoc2024.common.mapToArray
 import java.math.BigInteger
 
 /**

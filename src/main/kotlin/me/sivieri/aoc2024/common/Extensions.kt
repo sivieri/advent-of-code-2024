@@ -181,28 +181,3 @@ internal fun <T, R> Iterable<T>.foldIndexed(initial: R, operation: (acc: R, Int,
     }
     return accumulator
 }
-
-fun combinationsWithRepetition(n: Int, r: Int): BigInteger {
-    require(n >= 1 && r >= 0)
-    return factorialHelper(n + r - 1) / factorialHelper(r) / factorialHelper(n - 1)
-}
-
-private fun factorialHelper(n: Int): BigInteger {
-    var acc = BigInteger.ONE
-    for (i in 2..n) {
-        acc *= i.toBigInteger()
-    }
-    return acc
-}
-
-inline fun <reified R> IntArray.mapToArray(newSize: Int = size, transform: (Int) -> R): Array<R> {
-    val result = arrayOfNulls<R>(newSize)
-    repeat(newSize) {
-        result[it] = transform(this[it])
-    }
-    @Suppress("UNCHECKED_CAST")
-    return result as Array<R>
-}
-
-inline fun <reified T> List<T>.combinationsWithRepetition(length: Int): CombinatorialSequence<List<T>> =
-    CombinationsWithRepetitionGenerator.generate(this, length)
