@@ -2,12 +2,12 @@ package me.sivieri.aoc2024.day11
 
 class PlutoPebbles(data: String) {
 
-    private val stones: MutableList<Long> = data.trim('\n').split(" ").map { it.toLong() }.toMutableList()
+    val stones: MutableList<Long> = data.trim('\n').split(" ").map { it.toLong() }.toMutableList()
     private var rounds: Int = 0
 
     fun play(times: Int) = (0 until times).forEach { play() }
 
-    private fun play() {
+    fun play() {
         rounds++
         var counter = 0
         var max = stones.size
