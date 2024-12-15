@@ -70,4 +70,68 @@ class TopographicMapTest {
         assertEquals(36, score)
     }
 
+    @Test
+    fun `part 2 example 1`() {
+        val data = """
+            .....0.
+            ..4321.
+            ..5..2.
+            ..6543.
+            ..7..4.
+            ..8765.
+            ..9....
+        """.trimIndent()
+        val map = TopographicMap(data)
+        val score = map.sumTrailheadRatings()
+        assertEquals(3, score)
+    }
+
+    @Test
+    fun `part 2 example 2`() {
+        val data = """
+            ..90..9
+            ...1.98
+            ...2..7
+            6543456
+            765.987
+            876....
+            987....
+        """.trimIndent()
+        val map = TopographicMap(data)
+        val score = map.sumTrailheadRatings()
+        assertEquals(13, score)
+    }
+
+    @Test
+    fun `part 2 example 3`() {
+        val data = """
+            012345
+            123456
+            234567
+            345678
+            4.6789
+            56789.
+        """.trimIndent()
+        val map = TopographicMap(data)
+        val score = map.sumTrailheadRatings()
+        assertEquals(227, score)
+    }
+
+    @Test
+    fun `part 2 example 4`() {
+        val data = """
+            89010123
+            78121874
+            87430965
+            96549874
+            45678903
+            32019012
+            01329801
+            10456732
+        """.trimIndent()
+        val map = TopographicMap(data)
+        val score = map.sumTrailheadRatings()
+        assertEquals(81, score)
+    }
+
 }

@@ -3,6 +3,7 @@ package me.sivieri.aoc2024.day10
 import me.sivieri.aoc2024.common.Coordinate2
 import me.sivieri.aoc2024.common.Coordinate2Payload
 import org.jgrapht.alg.connectivity.ConnectivityInspector
+import org.jgrapht.alg.shortestpath.AllDirectedPaths
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.SimpleDirectedGraph
@@ -71,6 +72,20 @@ class TopographicMap(data: String) {
                     }
                     .size
         }
+    }
+
+    fun sumTrailheadRatings(): Int {
+        val inspector = AllDirectedPaths(graph)
+        val zeros = graph.vertexSet().filter { it.payload == 0 }
+        val nines = graph.vertexSet().filter { it.payload == 9 }
+        return zeros
+            .sumOf { zero ->
+                nines
+                    .sumOf { nine ->
+                        val paths = inspector.getAllPaths(zero, nine, true, null)
+                        paths.size
+                    }
+            }
     }
 
 }
