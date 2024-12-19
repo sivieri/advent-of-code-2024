@@ -20,6 +20,20 @@ data class Coordinate2(
         return Coordinate2(pivot.x - xdiff, pivot.y - ydiff)
     }
 
+    fun neighbors(): List<Coordinate2> = listOf(
+        Coordinate2(this.x - 1, this.y),
+        Coordinate2(this.x + 1, this.y),
+        Coordinate2(this.x, this.y - 1),
+        Coordinate2(this.x, this.y + 1)
+    )
+
+    fun neighbors(isValid: (Coordinate2) -> Boolean): List<Coordinate2> = listOf(
+        Coordinate2(this.x - 1, this.y),
+        Coordinate2(this.x + 1, this.y),
+        Coordinate2(this.x, this.y - 1),
+        Coordinate2(this.x, this.y + 1)
+    ).filter { isValid(it) }
+
     override fun compareTo(other: Coordinate2): Int = when {
         ORIGIN.distance(this) < ORIGIN.distance(other) -> -1
         ORIGIN.distance(this) > ORIGIN.distance(other) -> 1
