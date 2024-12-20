@@ -14,6 +14,8 @@ class Garden(private val data: String) {
 
     fun calculateFencingPrice(): Long = findPlots().sumOf { println(it); it.calculateFencingPrice().toLong() }
 
+    fun calculateFencingSidesPrice(): Long = findPlots().sumOf { println(it); it.calculateFencingSidesPrice().toLong() }
+
     private fun findPlots(): List<Plot> =
         ('A' .. 'Z').flatMap { l ->
             val filtered = data

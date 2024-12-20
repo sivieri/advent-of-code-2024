@@ -1,0 +1,58 @@
+A region of C plants with price 1 * 4 = 4.
+A region of C plants with price 14 * 28 = 392.
+A region of E plants with price 13 * 18 = 234.
+A region of F plants with price 10 * 18 = 180.
+A region of I plants with price 14 * 22 = 308.
+A region of I plants with price 4 * 8 = 32.
+A region of J plants with price 11 * 20 = 220.
+A region of M plants with price 5 * 12 = 60.
+A region of R plants with price 12 * 18 = 216.
+A region of S plants with price 3 * 8 = 24.
+A region of V plants with price 13 * 20 = 260.
+
+Plot(name='C', perimeter=12, area=6)
+Plot(name='C', perimeter=6, area=2)
+Plot(name='C', perimeter=14, area=6)
+x Plot(name='C', perimeter=4, area=1)
+Plot(name='E', perimeter=14, area=6)
+Plot(name='E', perimeter=12, area=5)
+Plot(name='E', perimeter=6, area=2)
+Plot(name='F', perimeter=12, area=5)
+Plot(name='F', perimeter=10, area=5)
+x Plot(name='I', perimeter=8, area=4)
+Plot(name='I', perimeter=20, area=12)
+Plot(name='I', perimeter=6, area=2)
+Plot(name='J', perimeter=18, area=10)
+Plot(name='J', perimeter=4, area=1)
+x Plot(name='M', perimeter=12, area=5)
+x Plot(name='R', perimeter=18, area=12)
+x Plot(name='S', perimeter=8, area=3)
+x Plot(name='V', perimeter=20, area=13)
+
+EEEEE
+EXXXX
+EEEEE
+EXXXX
+EEEEE
+
+FFFFF
+FXXXX
+FFFFF
+FXXXX
+FXXXX
+
+0,1,2,3,4   0,2      1,3,4
+
+0,1,2,3,4   1,2,4    1,3
+
+1,2         2,3      1,3
+
+0,1,2,3,4   -        0,1,2,3,4
+0,2,4       -        0,2,4
+
+AAAAAA
+AAABBA
+AAABBA
+ABBAAA
+ABBAAA
+AAAAAA
