@@ -122,7 +122,7 @@ class GardenTest {
             MMMISSJEEE
         """.trimIndent()
         val garden = Garden(data)
-        val result = garden.calculateFencingPrice()
+        val result = garden.calculateFencingSidesPrice()
         assertEquals(1206, result)
     }
 
