@@ -35,7 +35,7 @@ class TopographicMap(data: String) {
                     val p = Coordinate2Payload(x, y, value.digitToInt())
                     p
                         .toCoordinate2()
-                        .neighbors()
+                        .neighbors { it.isValid() }
                         .mapNotNull {
                             val v = map[it.y][it.x]
                             if (v in '0' .. '9') Coordinate2Payload(it.x, it.y, map[it.y][it.x].digitToInt())
