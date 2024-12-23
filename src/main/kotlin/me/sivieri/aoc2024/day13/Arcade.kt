@@ -9,9 +9,6 @@ class Arcade(data: String) {
             ClawMachine.parse(lines[0], lines[1], lines[2])
         }
 
-    fun minTokens(): Int {
-        val solvable = machines.filter { it.calculatePrice() != -1 }
-        TODO()
-    }
+    fun minTokens(): Int = machines.sumOf { it.calculateMaxPrice() }
 
 }

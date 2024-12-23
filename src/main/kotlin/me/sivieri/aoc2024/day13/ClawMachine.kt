@@ -12,9 +12,17 @@ data class ClawMachine(
     val prize: Coordinate2
 ) {
 
-    fun calculatePrice(): Int = buttonsPressing()
-        ?.let { it.first * 3 + it.second * 1 }
-        ?: -1
+    fun calculatePrice(): Int =
+        buttonsPressing()
+            ?.let { price(it.first, it.second) }
+            ?: -1
+
+    private fun price(a: Int, b: Int) = a * A_PRICE + b * B_PRICE
+
+    fun calculateMaxPrice(): Int =
+        buttonsPressing()
+            ?.let { price(it.first, it.second) }
+            ?: 0
 
     private fun buttonsPressing(): Pair<Int, Int>? {
         val a = arrayOf(
@@ -30,14 +38,22 @@ data class ClawMachine(
         val x = am.solve(bm)
         val ap = x.get(0)
         val bp = x.get(1)
-        println("For $this: a $ap, b $bp")
         val apr = ap.roundToInt()
         val bpr = bp.roundToInt()
-        return if (abs(ap - apr) > 0.0001 || abs(bp - bpr) > 0.0001) null
-        else Pair(apr, bpr)
+        return if (abs(ap - apr) > 0.0001 || abs(bp - bpr) > 0.0001) {
+            println("${this.a.x},${this.a.y},${this.b.x},${this.b.y},${this.prize.x},${this.prize.y},$apr,$bpr,R")
+            null
+        }
+        else {
+            println("${this.a.x},${this.a.y},${this.b.x},${this.b.y},${this.prize.x},${this.prize.y},$apr,$bpr,A")
+            Pair(apr, bpr)
+        }
     }
 
     companion object {
+        private const val A_PRICE = 3
+        private const val B_PRICE = 1
+
         private val linea = "Button A: X\\+([0-9]+), Y\\+([0-9]+)".toRegex()
         private val lineb = "Button B: X\\+([0-9]+), Y\\+([0-9]+)".toRegex()
         private val lineprize = "Prize: X=([0-9]+), Y=([0-9]+)".toRegex()
