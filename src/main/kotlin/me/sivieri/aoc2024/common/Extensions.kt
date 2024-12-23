@@ -97,6 +97,9 @@ internal fun <T> List<T>.getMiddleElement(): T = this[(this.size - 1) / 2]
 internal fun <T> Array<Array<T>>.stringRepresentation(cellSeparator: String, f: (T) -> String): String =
     this.joinToString("\n") { it.joinToString(cellSeparator) { f(it) }  }
 
+internal fun <T> List<List<T>>.stringRepresentation(cellSeparator: String, f: (T) -> String): String =
+    this.joinToString("\n") { it.joinToString(cellSeparator) { f(it) }  }
+
 internal fun String.isLowerCase(): Boolean = this.all { it in 'a'..'z' }
 
 internal fun <V, E> Graph<V, E>.getOtherVertex(vertex: V, edge: E): V =
@@ -181,3 +184,11 @@ internal fun <T, R> Iterable<T>.foldIndexed(initial: R, operation: (acc: R, Int,
     }
     return accumulator
 }
+
+internal fun <T> List<T>.splitInTwo(): Pair<List<T>, List<T>> = this
+    .mapIndexed { index, t -> Pair(index, t) }
+    .partition { it.first < this.size / 2 }
+    .let { Pair(
+        it.first.map { it.second },
+        it.second.map { it.second }
+    ) }
