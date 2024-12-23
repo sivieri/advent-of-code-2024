@@ -9,6 +9,8 @@ class Arcade(data: String) {
             ClawMachine.parse(lines[0], lines[1], lines[2])
         }
 
-    fun minTokens(): Int = machines.sumOf { it.calculateMaxPrice() }
+    fun minTokens(): Int = machines.sumOf { it.calculatePrice() }
+
+    fun minLargerTokens(): Long = machines.sumOf { it.calculateLargerPrice() }
 
 }
