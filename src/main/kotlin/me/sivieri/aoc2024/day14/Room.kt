@@ -15,9 +15,33 @@ class Room(
 
     fun findSafetyFactor(turns: Int): Long {
         repeat(turns) { robots.forEach { it.turn(maxX, maxY) } }
-        printBoard()
+        println(boardToString())
         val quadrants = calculateQuadrants()
         return quadrants.multiplyBy { it.toLong() }
+    }
+
+    fun findTurnsToTree(): Int {
+        var rounds = 0
+        while (!findTree()) {
+            rounds++
+            if (rounds % 1000 == 0) println("Turn $rounds")
+            robots.forEach { it.turn(maxX, maxY) }
+        }
+        return rounds
+    }
+
+    private fun findTree(): Boolean {
+        val board = boardToString()
+        if (board.contains(TREE_THRESHOLD)) {
+            println(board)
+            print("Continue? Y/N ")
+            return when (readln()[0]) {
+                'Y' -> false
+                'N' -> true
+                else -> throw IllegalArgumentException("Unknown input")
+            }
+        }
+        else return false
     }
 
     private fun calculateQuadrants(): List<Int> {
@@ -54,14 +78,18 @@ class Room(
         }
     }
 
-    private fun printBoard(): Unit =
-        println(
-            (0 until maxY)
-                .map { y -> (0 until maxX).map { x -> Pair(x, y) } }
-                .stringRepresentation("") { (x, y) ->
-                    val c = Coordinate2(x, y)
-                    robots.count { it.position == c }.toString()
-                }
-        )
+    private fun boardToString(): String =
+        (0 until maxY)
+            .map { y -> (0 until maxX).map { x -> Pair(x, y) } }
+            .stringRepresentation("") { (x, y) ->
+                val c = Coordinate2(x, y)
+                robots
+                    .count { it.position == c }
+                    .let { if (it == 0) "." else it.toString() }
+            }
+
+    companion object {
+        private const val TREE_THRESHOLD = "1111111111"
+    }
 
 }
