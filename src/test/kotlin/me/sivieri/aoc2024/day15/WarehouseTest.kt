@@ -71,6 +71,18 @@ class WarehouseTest {
         val result = warehouse.extendedString()
         val expected = """
             ##############
+            ##......##..##
+            ##..........##
+            ##....[][]@.##
+            ##....[]....##
+            ##..........##
+            ##############
+        """.trimIndent()
+        assertEquals(expected, result)
+        warehouse.sumGPScoordsExtended()
+        val finalResult = warehouse.extendedString()
+        val finalExpected = """
+            ##############
             ##...[].##..##
             ##...@.[]...##
             ##....[]....##
@@ -78,7 +90,7 @@ class WarehouseTest {
             ##..........##
             ##############
         """.trimIndent()
-        assertEquals(expected, result)
+        assertEquals(finalExpected, finalResult)
     }
 
     @Test

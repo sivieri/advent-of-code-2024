@@ -3,6 +3,7 @@ package me.sivieri.aoc2024.day15
 import me.sivieri.aoc2024.common.Coordinate2
 import me.sivieri.aoc2024.common.Direction
 import me.sivieri.aoc2024.common.stringRepresentation
+import java.util.ArrayDeque
 
 class Warehouse(data: String) {
 
@@ -11,7 +12,7 @@ class Warehouse(data: String) {
     private val maxY: Int
     private val startingCoordinates: Coordinate2
 
-    private val content: List<Content>
+    private val content: Set<Content>
     private val extendedX: Int
     private val extendedY: Int
 
@@ -40,14 +41,14 @@ class Warehouse(data: String) {
         content = (0 until maxY).flatMap { y ->
             (0 until maxX).flatMap { x ->
                 when (this.map[y][x]) {
-                    WALL -> listOf(Wall(Coordinate2(x * 2, y)))
+                    WALL -> listOf(Wall(Coordinate2(x * 2, y), Coordinate2(x * 2 + 1, y)))
                     EMPTY -> listOf(Empty(Coordinate2(x * 2, y)), Empty(Coordinate2(x * 2 + 1, y)))
-                    BOX -> listOf(Box(Coordinate2(x * 2, y)))
+                    BOX -> listOf(Box(Coordinate2(x * 2, y), Coordinate2(x * 2 + 1, y)))
                     ROBOT -> listOf(Robot(Coordinate2(x * 2, y)), Empty(Coordinate2(x * 2 + 1, y)))
                     else -> throw IllegalArgumentException("Unknown symbol ${this.map[y][x]}")
                 }
             }
-        }
+        }.toSet()
 
         // common
         this.instructions = instructions
@@ -91,39 +92,57 @@ class Warehouse(data: String) {
         return content
             .filterIsInstance<Box>()
             .sumOf {
-                val c = it.c.minByOrNull { it.x }!!
-                100 * c.y + c.x
+                100 * it.left.y + it.right.x
             }
     }
 
-    private fun playExtended(): Coordinate2 = instructions.fold(startingCoordinates) { acc, next ->
-        val queue = mutableListOf<Coordinate2>()
-        var c = acc // current robot position
-        do {
-            queue.add(c)
-            c = next.updateCoordinate(c)
-        } while (map[c.y][c.x] != WALL && map[c.y][c.x] != EMPTY)
-        queue.add(c)
-        if (map[c.y][c.x] == WALL) acc
-        else { // EMPTY, move everything
-            TODO()
+    private fun playExtended() = instructions.forEachIndexed { index, next ->
+        println("Round $index, direction $next")
+        println(extendedString())
+        val robot = content.find { it is Robot }!!
+        val visited = mutableSetOf<Content>()
+        val queue = ArrayDeque<Content>()
+        queue.push(robot)
+        var wallFound = false
+        while (!queue.isEmpty() && ! wallFound) {
+            when (val c = queue.pop()) {
+                is Empty -> visited.add(c)
+                is Wall -> wallFound = true
+                else -> {
+                    visited.add(c)
+                    c
+                        .findNeighbors(content, next)
+                        .forEach { if (!visited.contains(it)) queue.push(it) }
+                }
+            }
+        }
+        if (!wallFound) {
+            // need to move the empty
+            visited.forEach { it.move(next) }
         }
     }
 
     fun extendedString(): String {
-        val v = Array(extendedY) { Array(extendedX) { EMPTY } }
+        val v = Array(extendedY) { Array(extendedX) { NULL } }
         content.forEach {
             when (it) {
                 is Box -> {
-                    v[it.c[0].y][it.c[0].x] = LARGE_BOX[0]
-                    v[it.c[1].y][it.c[1].x] = LARGE_BOX[1]
+                    v[it.left.y][it.left.x] = LARGE_BOX[0]
+                    v[it.right.y][it.right.x] = LARGE_BOX[1]
                 }
-                is Empty -> v[it.c.first().y][it.c.first().x] = EMPTY
-                is Robot -> v[it.c.first().y][it.c.first().x] = ROBOT
-                is Wall -> it.c.forEach { v[it.y][it.x] = WALL }
+                is Empty -> v[it.c.y][it.c.x] = EMPTY
+                is Robot -> v[it.c.y][it.c.x] = ROBOT
+                is Wall -> {
+                    v[it.left.y][it.left.x] = WALL
+                    v[it.right.y][it.right.x] = WALL
+                }
             }
         }
-        return v.stringRepresentation("")
+        return v
+            .stringRepresentation("")
+            .also {
+                if (it.contains("!")) throw IllegalStateException("Not all cells are filled\n$it")
+            }
     }
 
     companion object {
@@ -131,6 +150,7 @@ class Warehouse(data: String) {
         private const val BOX = 'O'
         private const val ROBOT = '@'
         private const val EMPTY = '.'
+        private const val NULL = '!'
         private val LARGE_BOX = listOf('[', ']')
     }
 
