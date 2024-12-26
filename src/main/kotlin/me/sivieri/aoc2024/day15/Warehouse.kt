@@ -42,15 +42,23 @@ class Warehouse(data: String) {
     }
 
     private fun play(): Coordinate2 = instructions.fold(startingCoordinates) { acc, next ->
-        val queue = ArrayDeque<Coordinate2>()
-        var c = next.updateCoordinate(acc)
-        while (map[c.y][c.x] == BOX) {
+        val queue = mutableListOf<Coordinate2>()
+        var c = acc // current robot position
+        do {
             queue.add(c)
-            c = next.updateCoordinate(acc)
-        }
-        if (queue.isEmpty() || !queue.any { map[it.y][it.x] == EMPTY }) acc
-        else {
-            TODO()
+            c = next.updateCoordinate(c)
+        } while (map[c.y][c.x] != WALL && map[c.y][c.x] != EMPTY)
+        queue.add(c)
+        if (map[c.y][c.x] == WALL) acc
+        else { // EMPTY, move everything
+            queue
+                .reversed()
+                .windowed(2)
+                .forEach { (cur, prev) ->
+                    map[cur.y][cur.x] = map[prev.y][prev.x]
+                    map[prev.y][prev.x] = EMPTY
+                }
+            queue[1]
         }
     }
 
