@@ -12,7 +12,7 @@ class Warehouse(data: String) {
     private val maxY: Int
     private val startingCoordinates: Coordinate2
 
-    private val content: Set<Content>
+    private var content: Set<Content>
     private val extendedX: Int
     private val extendedY: Int
 
@@ -92,13 +92,13 @@ class Warehouse(data: String) {
         return content
             .filterIsInstance<Box>()
             .sumOf {
-                100 * it.left.y + it.right.x
+                100 * it.left.y + it.left.x
             }
     }
 
     private fun playExtended() = instructions.forEachIndexed { index, next ->
-        println("Round $index, direction $next")
-        println(extendedString())
+        println("Round ${index + 1} / ${instructions.size}, direction $next")
+        // println(extendedString())
         val robot = content.find { it is Robot }!!
         val visited = mutableSetOf<Content>()
         val queue = ArrayDeque<Content>()
@@ -117,8 +117,25 @@ class Warehouse(data: String) {
             }
         }
         if (!wallFound) {
-            // need to move the empty
-            visited.forEach { it.move(next) }
+            val n = mutableSetOf<Content>()
+            val old = content - visited
+            val updated = visited.mapNotNull { it.move(next) }
+            val updatedCoords = updated.flatMap { it.allCoords() }.toSet()
+            val oldUntouched = old.filter { c ->
+                updatedCoords.none { c.contains(it) }
+            }
+            val allCoords = updatedCoords + oldUntouched.flatMap { it.allCoords() }
+            val missing = (0 until extendedY).flatMap { y ->
+                (0 until extendedX)
+                    .filter { x ->
+                        !allCoords.contains(Coordinate2(x, y))
+                    }
+                    .map { x -> Coordinate2(x, y) }
+            }.map { Empty(it) }
+            n.addAll(updated)
+            n.addAll(oldUntouched)
+            n.addAll(missing)
+            content = n
         }
     }
 

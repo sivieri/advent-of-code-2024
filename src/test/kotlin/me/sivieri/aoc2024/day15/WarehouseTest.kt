@@ -120,7 +120,7 @@ class WarehouseTest {
         """.trimIndent()
         val warehouse = Warehouse(data)
         val result = warehouse.sumGPScoordsExtended()
-        assertEquals(9091, result)
+        assertEquals(9021, result)
     }
 
 }
