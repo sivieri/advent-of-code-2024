@@ -3,7 +3,7 @@ package me.sivieri.aoc2024.day17
 class Computer(data: String) {
 
     private val program: List<Int>
-    private val registers: Registers
+    private var registers: Registers
     private var pointer = 0
 
     init {
@@ -42,6 +42,20 @@ class Computer(data: String) {
             else pointer = jump
         }
         return output.joinToString(",")
+    }
+
+    fun findRegisterValue(): Int {
+        val ref = program.joinToString(",")
+        var out: String
+        var i = -1
+        do {
+            i++
+            if (i % 1_000_000 == 0) println("Round $i")
+            registers = Registers(i, 0, 0)
+            pointer = 0
+            out = calculateOutput()
+        } while (out != ref)
+        return i
     }
 
     private fun comboOperand(v: Int): Int = when (v) {
