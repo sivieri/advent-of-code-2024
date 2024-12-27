@@ -2,10 +2,15 @@ package me.sivieri.aoc2024.day16
 
 import me.sivieri.aoc2024.common.Coordinate2
 import me.sivieri.aoc2024.common.Direction
+import org.jgrapht.alg.shortestpath.AllDirectedPaths
+import org.jgrapht.alg.shortestpath.BhandariKDisjointShortestPaths
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath
+import org.jgrapht.alg.shortestpath.EppsteinKShortestPath
+import org.jgrapht.alg.shortestpath.EppsteinShortestPathIterator
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.DefaultWeightedEdge
 import org.jgrapht.graph.SimpleDirectedWeightedGraph
+import kotlin.math.roundToInt
 
 class Maze(data: String) {
 
@@ -92,8 +97,25 @@ class Maze(data: String) {
     fun shortestPathCost(): Int {
         val sp = DijkstraShortestPath(graph)
         return ends.minOf {
-            sp.getPathWeight(start, it).toInt()
+            sp.getPathWeight(start, it).roundToInt()
         }
+    }
+
+    fun tilesAlongShortestPaths(): Int {
+        val sp = DijkstraShortestPath(graph)
+        val maxLength = ends.maxOf { sp.getPath(start, it).length }
+        val weight = ends.minOf { sp.getPathWeight(start, it).roundToInt() }
+        println("Reference length: $maxLength, reference weight: $weight")
+        val k = EppsteinKShortestPath(graph)
+        val paths = ends
+            .flatMap {
+                k.getPaths(start, it, 20)
+            }
+            .filter { it.weight.roundToInt() == weight }
+        return paths
+            .flatMap { it.vertexList.map { it.c } }
+            .distinct()
+            .size
     }
 
     private fun Coordinate2.isValid(): Boolean =
