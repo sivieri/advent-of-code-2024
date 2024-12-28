@@ -53,4 +53,28 @@ class RacetrackTest {
         assertEquals(5, result)
     }
 
+    @Test
+    fun `part 2 example`() {
+        val data = """
+            ###############
+            #...#...#.....#
+            #.#.#.#.#.###.#
+            #S#...#.#.#...#
+            #######.#.#.###
+            #######.#.#...#
+            #######.#.###.#
+            ###..E#...#...#
+            ###.#######.###
+            #...###...#...#
+            #.#####.#.###.#
+            #.#...#.#.#...#
+            #.#.#.#.#.#.###
+            #...#...#...###
+            ###############
+        """.trimIndent()
+        val racetrack = Racetrack(data)
+        val result = racetrack.countCheats(20, 50)
+        assertEquals(285, result)
+    }
+
 }

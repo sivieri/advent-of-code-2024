@@ -14,22 +14,28 @@ class Racetrack(data: String) {
         .toTypedArray()
     private val maxX = map[0].size
     private val maxY = map.size
-    private val graph = SimpleDirectedGraph<Coordinate2, DefaultEdge>(DefaultEdge::class.java)
-    private val start: Coordinate2
-    private val end: Coordinate2
 
-    init {
-        var s = Coordinate2.ORIGIN
-        var e = Coordinate2.ORIGIN
+    private val grid = data
+        .split("\n")
+        .filter { it.isNotBlank() }
+        .flatMapIndexed { y, row ->
+            row.mapIndexedNotNull { x, c ->
+                if (c != '#') Coordinate2(x, y) to c else null
+            }
+        }
+        .toMap()
+
+    fun countCheats(limit: Int): Int {
+        val graph = SimpleDirectedGraph<Coordinate2, DefaultEdge>(DefaultEdge::class.java)
+        var start = Coordinate2.ORIGIN
+        var end = Coordinate2.ORIGIN
         (0 until maxX).forEach { x ->
             (0 until maxY).forEach { y ->
                 graph.addVertex(Coordinate2(x, y))
-                if (map[y][x] == START) s = Coordinate2(x, y)
-                if (map[y][x] == END) e = Coordinate2(x, y)
+                if (map[y][x] == START) start = Coordinate2(x, y)
+                if (map[y][x] == END) end = Coordinate2(x, y)
             }
         }
-        start = s
-        end = e
         (0 until maxX).forEach { x ->
             (0 until maxY).forEach { y ->
                 val c = Coordinate2(x, y)
@@ -38,9 +44,7 @@ class Racetrack(data: String) {
                     .forEach { graph.addEdge(c, it) }
             }
         }
-    }
 
-    fun countCheats(limit: Int): Int {
         val sp = DijkstraShortestPath(graph)
         val maxLength = sp.getPath(start, end).length
         val allWalls = (1 until maxX - 1).flatMap { x ->
@@ -60,6 +64,39 @@ class Racetrack(data: String) {
             }
         }
         return cheatsLength.filter { it < maxLength && (maxLength - it) >= limit }.size
+    }
+
+    fun countCheats(maxCheats: Int, limit: Int): Int {
+        var start = Coordinate2.ORIGIN
+        (0 until maxX).forEach { x ->
+            (0 until maxY).forEach { y ->
+                if (map[y][x] == START) start = Coordinate2(x, y)
+            }
+        }
+
+        // copied from https://github.com/ClouddJR/advent-of-code-2024/blob/main/src/main/kotlin/com/clouddjr/advent2024/Day20.kt
+        // because WTF
+        val path = mutableListOf(start)
+        val visited = mutableSetOf(start)
+        val toVisit = mutableListOf(start)
+
+        while (toVisit.isNotEmpty()) {
+            val current = toVisit.removeFirst()
+            current.neighbors().forEach { n ->
+                if (n in grid && n !in visited) {
+                    toVisit += n
+                    visited += n
+                    path += n
+                }
+            }
+        }
+
+        return path.indices.sumOf { i ->
+            (i + limit..path.lastIndex).count { j ->
+                val d = path[i].manhattanDistance(path[j])
+                d <= maxCheats && j - i - d >= limit
+            }
+        }
     }
 
     private fun Coordinate2.isValid(): Boolean =
