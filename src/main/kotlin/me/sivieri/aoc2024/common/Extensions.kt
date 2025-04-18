@@ -19,7 +19,7 @@ import kotlin.math.min
 internal fun String.toIntList(): List<Int> = this.split(",").map { it.toInt() }
 
 // https://gist.github.com/dmdrummond/4b1d8a4f024183375f334a5f0a984718
-internal fun <T> List<T>.permutations(): List<List<T>> {
+fun <T> List<T>.permutations(): List<List<T>> {
     val retVal: MutableList<List<T>> = mutableListOf()
 
     fun generate(k: Int, list: List<T>) {
@@ -53,7 +53,7 @@ internal fun <T> List<T>.permutationsLazy(): Sequence<List<T>> {
         }
 }
 
-internal fun <A, B> cartesianProduct(a: List<A>, b: List<B>): List<Pair<A, B>> =
+fun <A, B> cartesianProduct(a: List<A>, b: List<B>): List<Pair<A, B>> =
     a.flatMap { aElement -> b.map { bElement -> aElement to bElement } }
 
 internal fun <A, B> Collection<A>.crossProduct(other: Collection<B>): List<Pair<A, B>> =
@@ -64,7 +64,7 @@ internal fun <T> List<T>.twoCombinations(): List<Pair<T, T>> =
         (i + 1 until this.size).map { j ->  Pair(this[i], this[j]) }
     }
 
-internal fun <T> List<T>.threeCombinations(): List<Triple<T, T, T>> =
+fun <T> List<T>.threeCombinations(): List<Triple<T, T, T>> =
     indices.flatMap { i ->
         (i + 1 until this.size).flatMap { j ->
             (j + 1 until this.size).map { k ->
@@ -84,7 +84,7 @@ internal fun <T> cartesianProductOfThree(
         }
     }
 
-internal fun <T> List<T>.zipWithIndex(f: (Int) -> Int): List<Pair<Int, T>> =
+fun <T> List<T>.zipWithIndex(f: (Int) -> Int): List<Pair<Int, T>> =
     this.mapIndexed { index, t -> Pair(f(index), t) }
 
 internal fun <T> List<T>.multiplyBy(f: (T) -> Long): Long =
@@ -125,7 +125,7 @@ internal suspend fun <T, R> List<T>.pmap(f: suspend (T) -> R): List<R> = corouti
     map { async { f(it) } }.awaitAll()
 }
 
-internal fun String.halve(): Pair<String, String> {
+fun String.halve(): Pair<String, String> {
     val additionalOne = if (this.length % 2 == 0) 0 else 1
     return Pair(
         this.substring(0, this.length / 2 + additionalOne),
