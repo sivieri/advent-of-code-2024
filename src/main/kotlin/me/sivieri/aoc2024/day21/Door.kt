@@ -35,21 +35,29 @@ class Door {
                 val end = SequenceStepVertex(seq[1], i + 1, s.string())
                 firstGraph.addVertex(start)
                 firstGraph.addVertex(end)
-                if (i == 0) firstGraph.addEdge(formalStart, start, SequenceEdge(emptyList()))
-                if (i + 1 == s.size - 1) firstGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
+                if (i == 0) {
+                    firstGraph.addEdge(formalStart, start, SequenceEdge(emptyList()))
+                    firstGraph.setEdgeWeight(formalStart, start, 0.0)
+                }
+                if (i + 1 == s.size - 1) {
+                    firstGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
+                    firstGraph.setEdgeWeight(end, formalEnd, 0.0)
+                }
                 firstKeypad
                     .findDistances(seq[0], seq[1])
                     .forEach {
                         firstGraph.addEdge(start, end, SequenceEdge(it + listOf(START)))
+                        firstGraph.setEdgeWeight(start, end, it.size + 1.0)
                     }
             }
         exporter.exportGraph(firstGraph, OutputStreamWriter(FileOutputStream("firstgraph.dot")))
         val firstDriver = AllDirectedPaths(firstGraph)
         val firstDij = DijkstraShortestPath(firstGraph)
-        val firstMin = firstDij.getPath(formalStart, formalEnd).length
-        println("First min length: $firstMin")
+        val firstMin = firstDij.getPath(formalStart, formalEnd)
+        println("First min length: ${firstMin.length}")
+        println("First min weight: ${firstMin.weight}")
         val firstPaths = firstDriver
-            .getAllPaths(formalStart, formalEnd, true, firstMin)
+            .getAllPaths(formalStart, formalEnd, true, firstMin.length)
             .map { it.edgeList.map { it.sequence }.flatten() }
         val firstGlobalLength = firstPaths.minOf { it.size }
         val actualFirst = firstPaths.filter { it.size == firstGlobalLength }
@@ -70,18 +78,28 @@ class Door {
                     val end = SequenceStepVertex(seq[1], i + 1, main)
                     secondGraph.addVertex(start)
                     secondGraph.addVertex(end)
-                    if (i == 0) secondGraph.addEdge(formalStart, start, SequenceEdge(emptyList()))
-                    paths.forEach { secondGraph.addEdge(start, end, SequenceEdge(it + listOf(START))) }
-                    if (i + 1 == actual.size - 1) secondGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
+                    if (i == 0) {
+                        secondGraph.addEdge(formalStart, start, SequenceEdge(emptyList()))
+                        secondGraph.setEdgeWeight(formalStart, start, 0.0)
+                    }
+                    paths.forEach {
+                        secondGraph.addEdge(start, end, SequenceEdge(it + listOf(START)))
+                        secondGraph.setEdgeWeight(start, end, it.size + 1.0)
+                    }
+                    if (i + 1 == actual.size - 1) {
+                        secondGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
+                        secondGraph.setEdgeWeight(end, formalEnd, 0.0)
+                    }
                 }
         }
         exporter.exportGraph(secondGraph, OutputStreamWriter(FileOutputStream("secondgraph.dot")))
         val secondDriver = AllDirectedPaths(secondGraph)
         val secondDij = DijkstraShortestPath(secondGraph)
-        val secondMin = secondDij.getPath(formalStart, formalEnd).length
-        println("Second min length: $secondMin")
+        val secondMin = secondDij.getPath(formalStart, formalEnd)
+        println("Second min length: ${secondMin.length}")
+        println("Second min weight: ${secondMin.weight}")
         val secondPaths = secondDriver
-            .getAllPaths(formalStart, formalEnd, true, secondMin)
+            .getAllPaths(formalStart, formalEnd, true, secondMin.length)
             .map { it.edgeList.map { it.sequence }.flatten() }
         val secondGlobalLength = secondPaths.minOf { it.size }
         val actualSecond = secondPaths.filter { it.size == secondGlobalLength }
@@ -102,15 +120,25 @@ class Door {
                     val end = SequenceStepVertex(seq[1], i + 1, main)
                     thirdGraph.addVertex(start)
                     thirdGraph.addVertex(end)
-                    if (i == 0) thirdGraph.addEdge(formalStart, start, SequenceEdge(emptyList()))
-                    paths.forEach { thirdGraph.addEdge(start, end, SequenceEdge(it + listOf(START))) }
-                    if (i + 1 == actual.size - 1) thirdGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
+                    if (i == 0) {
+                        thirdGraph.addEdge(formalStart, start, SequenceEdge(emptyList()))
+                        thirdGraph.setEdgeWeight(formalStart, start, 0.0)
+                    }
+                    paths.forEach {
+                        thirdGraph.addEdge(start, end, SequenceEdge(it + listOf(START)))
+                        thirdGraph.setEdgeWeight(start, end, it.size + 1.0)
+                    }
+                    if (i + 1 == actual.size - 1) {
+                        thirdGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
+                        thirdGraph.setEdgeWeight(end, formalEnd, 0.0)
+                    }
                 }
         }
         exporter.exportGraph(thirdGraph, OutputStreamWriter(FileOutputStream("thirdgraph.dot")))
         val thirdDij = DijkstraShortestPath(thirdGraph)
         val thirdMin = thirdDij.getPath(formalStart, formalEnd)
         println("Third min length: ${thirdMin.length}")
+        println("Third min weight: ${thirdMin.weight}")
         val final = thirdMin.edgeList.map { it.sequence }.flatten()
         println(final.string())
         return final.size
