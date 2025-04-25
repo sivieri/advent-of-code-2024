@@ -15,28 +15,28 @@ class DoorTest {
     @Test
     fun `980A`() {
         val door = Door()
-        val result = door.calculateComplexity("029A")
+        val result = door.calculateComplexity("980A")
         assertEquals(60 * 980, result)
     }
 
     @Test
     fun `179A`() {
         val door = Door()
-        val result = door.calculateComplexity("029A")
+        val result = door.calculateComplexity("179A")
         assertEquals(68 * 179, result)
     }
 
     @Test
     fun `456A`() {
         val door = Door()
-        val result = door.calculateComplexity("029A")
+        val result = door.calculateComplexity("456A")
         assertEquals(64 * 456, result)
     }
 
     @Test
     fun `379A`() {
         val door = Door()
-        val result = door.calculateComplexity("029A")
+        val result = door.calculateComplexity("379A")
         assertEquals(64 * 379, result)
     }
 

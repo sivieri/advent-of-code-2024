@@ -46,8 +46,9 @@ class Door {
                 firstKeypad
                     .findDistances(seq[0], seq[1])
                     .forEach {
-                        firstGraph.addEdge(start, end, SequenceEdge(it + listOf(START)))
-                        firstGraph.setEdgeWeight(start, end, it.size + 1.0)
+                        val e = SequenceEdge(it + listOf(START))
+                        firstGraph.addEdge(start, end, e)
+                        firstGraph.setEdgeWeight(e, it.size + 1.0)
                     }
             }
         exporter.exportGraph(firstGraph, OutputStreamWriter(FileOutputStream("firstgraph.dot")))
@@ -83,8 +84,9 @@ class Door {
                         secondGraph.setEdgeWeight(formalStart, start, 0.0)
                     }
                     paths.forEach {
-                        secondGraph.addEdge(start, end, SequenceEdge(it + listOf(START)))
-                        secondGraph.setEdgeWeight(start, end, it.size + 1.0)
+                        val e = SequenceEdge(it + listOf(START))
+                        secondGraph.addEdge(start, end, e)
+                        secondGraph.setEdgeWeight(e, it.size + 1.0)
                     }
                     if (i + 1 == actual.size - 1) {
                         secondGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
@@ -125,8 +127,9 @@ class Door {
                         thirdGraph.setEdgeWeight(formalStart, start, 0.0)
                     }
                     paths.forEach {
-                        thirdGraph.addEdge(start, end, SequenceEdge(it + listOf(START)))
-                        thirdGraph.setEdgeWeight(start, end, it.size + 1.0)
+                        val e = SequenceEdge(it + listOf(START))
+                        thirdGraph.addEdge(start, end, e)
+                        thirdGraph.setEdgeWeight(e, it.size + 1.0)
                     }
                     if (i + 1 == actual.size - 1) {
                         thirdGraph.addEdge(end, formalEnd, SequenceEdge(emptyList()))
@@ -151,8 +154,12 @@ class Door {
         private val exporter = DOTExporter<SequenceStepVertex, SequenceEdge>()
 
         init {
-            exporter.setVertexAttributeProvider { v -> mapOf("label" to DefaultAttribute(v.toString(), AttributeType.STRING)) }
-            exporter.setEdgeAttributeProvider { e -> mapOf("label" to DefaultAttribute(e.sequence.string(), AttributeType.STRING)) }
+            exporter.setVertexAttributeProvider { v ->
+                mapOf("label" to DefaultAttribute(v.toString(), AttributeType.STRING))
+            }
+            exporter.setEdgeAttributeProvider { e ->
+                mapOf("label" to DefaultAttribute(e.sequence.string(), AttributeType.STRING))
+            }
         }
     }
 
