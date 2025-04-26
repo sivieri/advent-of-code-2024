@@ -2,7 +2,7 @@ package me.sivieri.aoc2024.day22
 
 import me.sivieri.aoc2024.common.Utils
 
-object Main1 {
+object Main2 {
 
     @JvmStatic
     fun main(args: Array<String>) {
